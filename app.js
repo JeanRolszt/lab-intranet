@@ -20,8 +20,6 @@
     app.engine('handlebars',handlebars({defaultLayout: 'main'}))
     app.set('view engine','handlebars')
 
-    //MONGOOSE
-
     //PUBLIC
     app.use(express.static(path.join(__dirname, 'public')));
 
@@ -38,5 +36,5 @@
 //OUTROS
 const PORT = 8081
 app.listen(PORT,()=>{
-    console.log("Servidor rodando")
+    console.log(`Servidor rodando na porta ${PORT}`)
 })

@@ -1,5 +1,6 @@
 const express = require("express")
 const router = express.Router()
+const bodyParser = require('body-parser')
 
 
 router.get('/',(req,res)=>{
@@ -8,6 +9,9 @@ router.get('/',(req,res)=>{
 
 router.get('/maker',(req,res)=>{
     res.render("orcamentos/maker")
+})
+router.post('/maker',(req,res)=>{
+    res.end(JSON.stringify(req.body))
 })
 
 router.get('/fdm-ext',(req,res)=>{
