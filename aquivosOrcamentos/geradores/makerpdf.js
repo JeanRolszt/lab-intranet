@@ -5,15 +5,37 @@ exports.gerarpdfmaker = (info)=>{
 
     const fs = require('fs')
     const jsPDF = require('jspdf/dist/jspdf.node.min')
-    var idPDF = 'L2002003MAK';
+
+
+
+    var data = new Date();
+
+    var mes = (data.getMonth() + 1).toString();
+    var ano = (data.getFullYear()).toString();
+    var id = fs.readdirSync('./public/pdfs').length+1;
+    console.log(id)
+    id = id.toString();
+    
+    if(id.length==1)id='00'+id;
+    else if(id.length==2)id='0'+id;
+    
+    if(mes.length==1) mes = '0'+mes;
+    var idPDF = `L${ano[2]}${ano[3]}${mes}${id}MAK`;
 
     // Default export is a4 paper, portrait, using milimeters for units
     var doc = new jsPDF()
 
-    doc.text(info, 10, 10)
+    var totalItens=0;
+    for(var i=0;info['item'+i];i++){
+        totalItens++;
+    }
+    //console.log(totalItens)
+
+    
+    doc.text(info.nome, 10, 10)
 
     fs.writeFileSync(`./public/pdfs/${idPDF}.pdf`, doc.output())
-    // doc.save('a4.pdf')
+
     return idPDF;
 
     delete global.window;

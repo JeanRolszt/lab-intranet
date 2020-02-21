@@ -13,7 +13,8 @@ router.get('/maker',(req,res)=>{
     res.render("orcamentos/maker")
 })
 router.post('/maker',(req,res)=>{
-    idPDF = makerPDF.gerarpdfmaker(JSON.stringify(req.body))
+    // idPDF = makerPDF.gerarpdfmaker(JSON.stringify(req.body))
+    idPDF = makerPDF.gerarpdfmaker(req.body)
     // var file = fs.createReadStream(`/public/pdfs/${idPDF}.pdf`);
     // file.pipe(res);
     // res.download(__dirname + `/public/pdfs/${idPDF}.pdf`,`${idPDF}.pdf`)
