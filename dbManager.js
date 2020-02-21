@@ -22,6 +22,7 @@ class DbManager{
                 console.log('Connected');
             }
             });
+        this.db = db
         if (!this.exists){
             console.log('Criando tabelas')
             db.run('CREATE TABLE filamento (   \
@@ -42,25 +43,28 @@ class DbManager{
         }
         this.update('a','b','c','d');
         this.insert('a', ['b', 'c'])
-        db.close();
+        this.close()
+    }
 
+    close(){
+        this.db.close();
     }
     update(tablename, col, value, condition){
         var comm  =  `UPDATE ${tablename} SET ${col} = ${value} where ${condition};`
         console.log(comm)
-        //db.run(comm)
+        //this.db.run(comm)
     }
     
     insert(tableName, data){
         let aux = data.map((val) => '?').join(',');
         var comm = `INSERT INTO ${tableName} VALUES (${aux}) `;
         console.log(comm)
-        //db.run(comm, data)
+        //this.db.run(comm, data)
     }
 
     search(datas, tables, conditions='', modifiers=''){
         var comm = `SELECT ${datas} FROM ${tables}`
-        if (conditions.len){
+        if (conditions){
             command = command + " WHERE {0}".format(conditions)
         }
         if (modifiers != ''){
