@@ -2,7 +2,6 @@ const sqlite3 = require("sqlite3").verbose()
 const fs = require('fs')
 const DBname = 'estoque.db'
 
-
 class DbManager{
     constructor() 
     {
@@ -13,6 +12,7 @@ class DbManager{
         }
         this.init()
     }
+
     init(){
         let db = new sqlite3.Database(DBname, (err) => {
             if (err) {
@@ -42,8 +42,8 @@ class DbManager{
                 FOREIGN KEY(FILAMENTO_ID) REFERENCES filamento(FILAMENTO_ID));')
         }
         this.update('a','b','c','d');
-        this.insert('a', ['b', 'c'])
-        this.close()
+        //this.insert('a', ['b', 'c'])
+        //this.close()
     }
 
     close(){
@@ -56,10 +56,12 @@ class DbManager{
     }
     
     insert(tableName, data){
-        let aux = data.map((val) => '?').join(',');
-        var comm = `INSERT INTO ${tableName} VALUES (${aux}) `;
+        var values = Object.values(data)
+        let aux = values.map((val) => '?').join(','); 
+        var fields = Object.keys(data).join(',')
+        var comm = `INSERT INTO ${tableName} (${fields}) VALUES (${aux}) `;
         console.log(comm)
-        //this.db.run(comm, data)
+        this.db.run(comm,values)
     }
 
     search(datas, tables, conditions='', modifiers=''){
