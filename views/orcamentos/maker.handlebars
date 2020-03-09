@@ -1,29 +1,29 @@
-<form>
+<form method="POST">
     <div class="container mb-4">
         <div class="form-group row">
             <label for="name" class="col-sm-1 col-form-label" required >Nome</label>
             <div class="col-sm-11">
-                <input type="text" class="form-control" id="nome">
+                <input type="text" name ='nome' class="form-control" id="nome">
             </div>
         </div>
         <div class="form-group row">
             <label for="email" class="col-sm-1 col-form-label">Email</label>
             <div class="col-sm-5">
-                <input type="email" class="form-control" id="email">
+                <input type="email" name='email' class="form-control" id="email">
             </div>
             <label for="telefone" class="col-sm-1 col-form-label">Telefone</label>
             <div class="col-sm-5">
-                <input type="text" class="form-control" id="telefone">
+                <input type="text" name="telefone" class="form-control" id="telefone">
             </div>
         </div>
         <div class="form-group row">
             <label for="projeto" class="col-sm-1 col-form-label">Projeto</label>
             <div class="col-sm-11">
-                <input type="text" class="form-control" id="Projeto">
+                <input type="text" name="projeto" class="form-control" id="Projeto">
             </div>
         </div>
         <div class="custom-control custom-checkbox">
-            <input type="checkbox" class="custom-control-input" id="donoMaterial" onchange="updateAllMaker()">
+            <input type="checkbox" nome='donoMaterial' class="custom-control-input" id="donoMaterial" onchange="updateAllMaker()">
             <label class="custom-control-label" for="donoMaterial">Está usando material próprio.</label>
         </div>
     </div>
@@ -44,18 +44,18 @@
             </thead>
             <tbody>
                 <tr name="linha" id="linha0">
-                    <td><input type="text" class="form-control form-control-sm" id="item0" placeholder="Nome do item" onchange="updateAllMaker()"></td>
-                    <td><input type="number" class="form-control form-control-sm" id="quantidade0" onchange="updateAllMaker()"></td>
-                    <td><select id="material0" class="form-control form-control-sm" onchange="updateAllMaker()">
+                    <td><input type="text" class="form-control form-control-sm" name="item0" id="item0" placeholder="Nome do item" onchange="updateAllMaker()"></td>
+                    <td><input type="number" class="form-control form-control-sm" name="quantidade0" id="quantidade0" onchange="updateAllMaker()"></td>
+                    <td><select id="material0" name="material0" class="form-control form-control-sm" onchange="updateAllMaker()">
                         <option value="PLA">PLA</option>
                         <option value="ABS">ABS</option>
                         </select></td>
-                    <td><input type="number" class="form-control form-control-sm" id="tempo0" placeholder="min" onchange="updateAllMaker()"></td>
-                    <td><input type="number" class="form-control form-control-sm" id="massa0" placeholder="gramas" onchange="updateAllMaker()"></td>
+                    <td><input type="number" class="form-control form-control-sm" name="tempo0" id="tempo0" placeholder="min" onchange="updateAllMaker()"></td>
+                    <td><input type="number" class="form-control form-control-sm" name="massa0" id="massa0" placeholder="gramas" onchange="updateAllMaker()"></td>
                     <th id="precoporpeca0" style="font-weight: 400">R$0.00</th>
                     <th id="subtotal0" class="subtotal" style="font-weight: 400">R$0.00</th>
-                    <td><input type="text" class="form-control form-control-sm" id="cor0" onchange="updateAllMaker()"></td>
-                    <td ><input type="number" class="form-control form-control-sm" id="preenchimento0" onchange="updateAllMaker()" ></td>
+                    <td><input type="text" class="form-control form-control-sm" name="cor0" id="cor0" onchange="updateAllMaker()"></td>
+                    <td ><input type="number" class="form-control form-control-sm" name="preenchimento0" id="preenchimento0" onchange="updateAllMaker()" ></td>
                 </tr>
             </tbody>
         </table>
@@ -73,11 +73,11 @@
     <div class="container form-group row">
         <label for="number" class="col-sm-2 col-form-label" required >Tempo de consulta </label>
         <div class="col-sm-2">
-            <input type="number" class="form-control" id="tmpconsulta" onchange="updateAllMaker()">
+            <input type="number" class="form-control" name="tmpconsulta" id="tmpconsulta" onchange="updateAllMaker()">
         </div>
         <label class="col-sm-1 col-form-label">Responsável </label>
         <div class="col-sm-3">
-            <select id="listarespeonsaveis" class="form-control">
+            <select id="listarespeonsaveis" name="responsavel" class="form-control">
                 
             </select>
         </div>
@@ -87,6 +87,15 @@
             <span class="input-group-text" style="background-color: rgb(0, 105, 217); color:#fff">Preço Total</span>
         </div>
         <output id="total" type="text" class="form-control col-sm-1" style="text-align: center; background-color: rgb(0, 105, 217); color: #fff">R$0.00</output>
+
+    </div>
+    
+    <button type="submit"> send</button>
+    <div id="outputs">
+        <input type="hidden" name="total"/>
+        <input type="hidden" name="subtotal0"/>
+        <input type="hidden" name="precoporpeca0"/>
+        <input type="hidden" name="tipo" value="MAKER"/>
     </div>
 </form>
 <script src="/js/maker.js">

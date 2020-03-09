@@ -1,10 +1,8 @@
 listaDeReponsaveis()
-initDB()
 function addMaker(){
     //quantidade de itens
     var nItens = document.getElementsByName("linha")
     nItens = nItens.length
-    console.log(nItens)
 
     //pegando o local da tabela
     var tbody = document.getElementsByTagName("tbody")[0]
@@ -16,6 +14,7 @@ function addMaker(){
     var td = document.createElement('td')
     var input = document.createElement('input')
     input.setAttribute('id', 'item'+nItens)
+    input.setAttribute('name', 'item'+nItens)
     input.setAttribute('class','form-control form-control-sm')
     input.setAttribute('type','text')
     input.setAttribute('placeholder','Nome do item')
@@ -27,6 +26,7 @@ function addMaker(){
     td = document.createElement('td')
     input = document.createElement('input')
     input.setAttribute('id', 'quantidade'+nItens)
+    input.setAttribute('name', 'quantidade'+nItens)
     input.setAttribute('class','form-control form-control-sm')
     input.setAttribute('type','number')
     input.setAttribute('onchange','updateAllMaker()')
@@ -37,6 +37,7 @@ function addMaker(){
     var select = document.createElement('select')
     td = document.createElement('td')
     select.setAttribute('id', 'material'+nItens)
+    select.setAttribute('name','material'+nItens)
     select.setAttribute('class','form-control form-control-sm')
     select.setAttribute('onchange','updateAllMaker()')
     var option=document.createElement("option")
@@ -54,6 +55,7 @@ function addMaker(){
     td = document.createElement('td')
     input = document.createElement('input')
     input.setAttribute('id', 'tempo'+nItens)
+    input.setAttribute('name', 'tempo'+nItens)
     input.setAttribute('class','form-control form-control-sm')
     input.setAttribute('type','number')
     input.setAttribute('placeholder','min')
@@ -65,6 +67,7 @@ function addMaker(){
     td = document.createElement('td')
     input = document.createElement('input')
     input.setAttribute('id', 'massa'+nItens)
+    input.setAttribute('name', 'massa'+nItens)
     input.setAttribute('class','form-control form-control-sm')
     input.setAttribute('type','number')
     input.setAttribute('placeholder','gramas')
@@ -89,6 +92,7 @@ function addMaker(){
     td = document.createElement('td')
     input = document.createElement('input')
     input.setAttribute('id', 'cor'+nItens)
+    input.setAttribute('name', 'cor'+nItens)
     input.setAttribute('class','form-control form-control-sm')
     input.setAttribute('type','text')
     input.setAttribute('onchange','updateAllMaker()')
@@ -99,6 +103,7 @@ function addMaker(){
     td = document.createElement('td')
     input = document.createElement('input')
     input.setAttribute('id', 'preenchimento'+nItens)
+    input.setAttribute('name', 'preenchimento'+nItens)
     input.setAttribute('class','form-control form-control-sm')
     input.setAttribute('type','number')
     input.setAttribute('onchange','updateAllMaker()')
@@ -106,6 +111,21 @@ function addMaker(){
     novoTR.appendChild(td)
     
     tbody.appendChild(novoTR)
+
+    var inputppp = document.createElement('input')
+    inputppp.setAttribute('name','subtotal'+nItens)
+    inputppp.setAttribute('type','hidden')
+
+
+    var inputst= document.createElement('input')
+    inputst.setAttribute('name','precoporpeca'+nItens)
+    inputst.setAttribute('type','hidden')
+    inputst.setAttribute('value','')
+
+
+
+    document.getElementById('outputs').appendChild(inputppp)
+    document.getElementById('outputs').appendChild(inputst)
 }
 
 function rmvMaker(){
@@ -136,9 +156,12 @@ function updateMaker(index){
 
     var precoporpeca=(tempo*precoDoTempoDeImpressao*1.15)+(massa*precoDoMaterial);
     document.getElementById('precoporpeca'+index).innerText='R$'+(Math.round(precoporpeca * 100) / 100).toFixed(2);
+    document.getElementsByName('precoporpeca'+index)[0].value=(Math.round(precoporpeca * 100) / 100).toFixed(2);
+    console.log(document.getElementsByName('precoporpeca'+index)[0])
 
     var subtotal=precoporpeca*quantidade
     document.getElementById('subtotal'+index).innerText='R$'+(Math.round(subtotal * 100) / 100).toFixed(2);
+    document.getElementsByName('subtotal'+index)[0].value=(Math.round(subtotal * 100) / 100).toFixed(2);
 
 }
 
@@ -166,6 +189,7 @@ function updateAllMaker(){
     var total = (somaSubtotal+precotmpconsulta)/multiplicadorImposto
     
     document.getElementById('total').innerText="R$"+(Math.round(total * 100) / 100).toFixed(2);
+    document.getElementsByName('total')[0].value = (Math.round(total * 100) / 100).toFixed(2)
 
     
 }
@@ -180,14 +204,4 @@ function listaDeReponsaveis(){
         option.value = integrantes[i]
         select.add(option)
     }
-}
-
-function initDB(){
-    let db = new sqlite3.Datebase("db.db", (err) => {
-        if (err){
-            return console.error(err.message);
-        }
-        console.log('connected');
-    });
-    db.close()
 }
