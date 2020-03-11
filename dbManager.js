@@ -64,15 +64,18 @@ class DbManager{
         this.db.run(comm,values)
     }
 
-    search(datas, tables, conditions='', modifiers=''){
+    search(datas, tables, callback, conditions, modifiers){
         var comm = `SELECT ${datas} FROM ${tables}`
-        if (conditions){
-            command = command + " WHERE {0}".format(conditions)
+        if (conditions!=undefined){
+            comm = comm + " WHERE {0}".format(conditions)
         }
-        if (modifiers != ''){
-            command = command + " {0}".format(modifiers)
+        if (modifiers != undefined){
+            comm = comm + " {0}".format(modifiers)
         }
-}
+        var ret 
+        this.db.all(comm, callback)        
+        
+    }
 
 }
 

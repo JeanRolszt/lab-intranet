@@ -24,5 +24,12 @@ router.get('/gerenciar/adicionar',(req,res)=>{
     res.render("estoque/adicionar")
 })
 
+router.get('/gerenciar/plotData',(req,res)=>{
+    db.search("*", "USO", (err, rows) => {
+        console.log(rows)
+        res.send(rows)
+    })
+})
+
 
 module.exports = router
