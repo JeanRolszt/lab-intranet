@@ -25,10 +25,10 @@ router.get('/gerenciar/adicionar',(req,res)=>{
 })
 
 router.get('/gerenciar/plotData',(req,res)=>{
-    db.search("*", "USO", (err, rows) => {
+    db.search("POLIMERO, SUM(MASSA)", "filamento", (err, rows) => {
         console.log(rows)
         res.send(rows)
-    })
+    },""," group by POLIMERO")
 })
 
 
