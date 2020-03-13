@@ -13,9 +13,14 @@ router.get('/gerenciar/atualizar',(req,res)=>{
 })
 router.post('/gerenciar/atualizar',(req,res)=>{
     console.log(req.body)
+    d = new Date()
+    lD = d.toLocaleDateString().split("/")
+    sD = [lD[1], lD[0], lD[2]].join("/")
+
     db.insert("USO", {
         FILAMENTO_ID: req.body.codigo, 
-        MASSA: req.body.peso
+        MASSA: req.body.peso,
+        DATA: sD
     })
     
     res.render("estoque/atualizar", {isok: true})
