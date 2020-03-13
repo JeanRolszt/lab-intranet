@@ -27,15 +27,18 @@ router.get('/gerenciar/adicionar',(req,res)=>{
 router.get('/gerenciar/plotData', (req,res)=>{
     rows = "POLIMERO, SUM(MASSA)"
     cond = "group by POLIMERO"
+    mod = ""
     if (req.query != {} && req.query.label == "cor"){
         rows = "POLIMERO, COR, SUM(MASSA) "
         cond = "group by POLIMERO, COR  order by -SUM(MASSA)" 
-        console.log("entrou")
+    }
+    if (req.query != {} && req.query.origem != undefined){
+        mod =  req.query.origem
     }
     db.search(rows, "filamento", (err, rows) => {
         console.log(rows)
         res.send(rows)
-    },"",cond)
+    },mod,cond)
 })
 
 

@@ -40,10 +40,13 @@ Atualizado com sucesso!!!!
 
 <script>
 var sucesso;
-function plot(ctx, cor, t){
+function plot(ctx, cor, t, or){
     d = {}  
     if(cor){
         d = {label: "cor", cond: "ordered"}
+    }
+    if(or!=undefined){
+        d["origem"] = or
     }
     $.getJSON('/estoque/gerenciar/plotData', d, data=>{
         var pol = data.map(x=>x.POLIMERO)
@@ -56,10 +59,10 @@ function plot(ctx, cor, t){
         var myChart = new Chart(ctx, {
             type: t,
             data: {
-                labels: pol,//['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+                labels: pol,
                 datasets: [{
                     label: 'Massa(g)',
-                    data: m,//[12, 19, 3, 5, 2, 3],
+                    data: m,
                     backgroundColor: [
                         'rgba(255, 99, 132, 0.2)',
                         'rgba(54, 162, 235, 0.2)',
@@ -73,8 +76,7 @@ function plot(ctx, cor, t){
                         'rgba(54, 162, 235, 1)',
                         'rgba(255, 206, 86, 1)',
                         'rgba(75, 192, 192, 1)',
-                        'rgba(153, 102, 255, 1)',
-                        'rgba(255, 159, 64, 1)'
+                        'rgba(153, 102, 255, 1)'
                     ],
                     borderWidth: 1
                 }]
@@ -97,7 +99,7 @@ var ctx = document.getElementById('myChart1').getContext('2d');
 var ctx2 = document.getElementById('myChart2').getContext('2d');
 
 
-plot(ctx, false, "pie")
+plot(ctx, false, "pie", `RESPONSAVEL == "BEE"`)
 plot(ctx2, true, "horizontalBar")
 
 
