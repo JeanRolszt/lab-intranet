@@ -24,11 +24,18 @@ router.get('/gerenciar/adicionar',(req,res)=>{
     res.render("estoque/adicionar")
 })
 
-router.get('/gerenciar/plotData',(req,res)=>{
-    db.search("POLIMERO, SUM(MASSA)", "filamento", (err, rows) => {
+router.get('/gerenciar/plotData', (req,res)=>{
+    rows = "POLIMERO, SUM(MASSA)"
+    cond = "group by POLIMERO"
+    if (req.query != {} && req.query.label == "cor"){
+        rows = "POLIMERO, COR, SUM(MASSA) "
+        cond = "group by POLIMERO, COR  order by -SUM(MASSA)" 
+        console.log("entrou")
+    }
+    db.search(rows, "filamento", (err, rows) => {
         console.log(rows)
         res.send(rows)
-    },""," group by POLIMERO")
+    },"",cond)
 })
 
 

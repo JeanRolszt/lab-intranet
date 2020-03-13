@@ -35,7 +35,7 @@
 
 
 //OUTROS
-const PORT = 8081
+const PORT = 8082
 app.listen(PORT,()=>{
     console.log(`Servidor rodando na porta ${PORT}`)
     global.db = new dbManager()

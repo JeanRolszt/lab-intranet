@@ -65,7 +65,7 @@ class DbManager{
     }
 
     search(datas, tables, callback, conditions, modifiers){
-        var comm = `SELECT ${datas} FROM ${tables}`
+        var comm = `SELECT ${datas} FROM ${tables} `
         if (conditions!=undefined && conditions!="" ){
             comm = comm + " WHERE " + conditions
         }
