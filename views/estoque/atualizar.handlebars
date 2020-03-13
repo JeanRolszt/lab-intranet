@@ -33,7 +33,7 @@ Atualizado com sucesso!!!!
 </style>
 
 <div class="divLeft"><canvas id="myChart1" width="400" height="400"></canvas></div>
-<div class="divLeft"><canvas id="myChart2" width="400" height="400"></canvas></div>
+<div class="divRight"><canvas id="myChart2" width="400" height="400"></canvas></div>
 
 <script src="/js/Chart.min.js"></script>
 <script src="/js/jquery-3.4.1.js"></script>
@@ -99,7 +99,7 @@ var ctx = document.getElementById('myChart1').getContext('2d');
 var ctx2 = document.getElementById('myChart2').getContext('2d');
 
 
-plot(ctx, false, "pie", `RESPONSAVEL == "BEE"`)
+plot(ctx, false, "pie")
 plot(ctx2, true, "horizontalBar")
 
 
