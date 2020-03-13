@@ -41,7 +41,6 @@ router.get('/gerenciar/plotData', (req,res)=>{
         mod =  req.query.origem
     }
     db.search(rows, "filamento", (err, rows) => {
-        console.log(rows)
         res.send(rows)
     },mod,cond)
 })

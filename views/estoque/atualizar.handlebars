@@ -17,6 +17,7 @@ Atualizado com sucesso!!!!
 
 
 
+
 <style type="text/css">
     .divLeft {
         width:400px;
@@ -31,6 +32,23 @@ Atualizado com sucesso!!!!
 
     }
 </style>
+<form class="form-inline" >
+    <div class="form-group" style="width: 120px;">
+        <label for="Tabela"> Tabela</label>
+        <select class="form-control" id="tabela">
+        <option>Estoque</option>
+        <option>Uso</option>
+        </select>
+    </div>
+    <div class="form-group" style="width: 120px;">
+        <label for="Responsavel">Responsável</label>
+        <select class="form-control" id="responsavel" onchange="updatePlots()">
+        <option>Todos</option>
+        <option>LAB</option>
+        <option>BEE</option>
+        </select>
+    </div>
+</form>
 
 <div class="divLeft"><canvas id="myChart1" width="400" height="400"></canvas></div>
 <div class="divRight"><canvas id="myChart2" width="400" height="400"></canvas></div>
@@ -40,7 +58,7 @@ Atualizado com sucesso!!!!
 
 <script>
 var sucesso;
-function plot(ctx, cor, t, or){
+function plot(myChart, cor, or){
     d = {}  
     if(cor){
         d = {label: "cor", cond: "ordered"}
@@ -56,13 +74,22 @@ function plot(ctx, cor, t, or){
         }
         var m = data.map(x=>x["SUM(MASSA)"])
 
-        var myChart = new Chart(ctx, {
-            type: t,
+        myChart.data.labels = pol
+        myChart.data.datasets[0].data = m
+        myChart.update()
+
+    })
+}
+
+var ctx = document.getElementById('myChart1').getContext('2d');
+var ctx2 = document.getElementById('myChart2').getContext('2d');
+myChart1 = new Chart(ctx, {
+            type: "pie",
             data: {
-                labels: pol,
+                labels: ['a','b'],
                 datasets: [{
                     label: 'Massa(g)',
-                    data: m,
+                    data: [1,2],
                     backgroundColor: [
                         'rgba(255, 99, 132, 0.2)',
                         'rgba(54, 162, 235, 0.2)',
@@ -90,17 +117,58 @@ function plot(ctx, cor, t, or){
                     }]
                 }
             }
-        });
-        
         })
- 
+myChart2 = new Chart(ctx2,{
+            type: "horizontalBar",
+            data: {
+                labels: ['a','b'],
+                datasets: [{
+                    label: 'Massa(g)',
+                    data: [1,2],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        })
+
+function updatePlots(){
+    var x = document.getElementById("responsavel").value;
+    if(x!="Todos"){
+        plot(myChart1, false, `RESPONSAVEL=="${x}"`)
+        plot(myChart2, true, `RESPONSAVEL=="${x}"`)
+    }
+    else{
+        plot(myChart1, false)
+        plot(myChart2, true)
+    }
+    console.log(x)
 }
-var ctx = document.getElementById('myChart1').getContext('2d');
-var ctx2 = document.getElementById('myChart2').getContext('2d');
 
-
-plot(ctx, false, "pie")
-plot(ctx2, true, "horizontalBar")
+m1 = plot(myChart1, false)
+m2 = plot(myChart2, true)
 
 
 </script>
