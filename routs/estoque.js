@@ -28,6 +28,12 @@ router.post('/gerenciar/atualizar',(req,res)=>{
 router.get('/gerenciar/adicionar',(req,res)=>{
     res.render("estoque/adicionar")
 })
+router.get('/gerenciar/cadrastar',(req,res)=>{
+    res.render("estoque/cadrastar")
+})
+router.post('/gerenciar/cadrastar',(req,res)=>{
+    console.log(req.body)
+})
 
 router.get('/gerenciar/plotData', (req,res)=>{
     rows = "POLIMERO, SUM(MASSA)"
