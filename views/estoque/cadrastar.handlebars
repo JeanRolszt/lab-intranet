@@ -1,11 +1,48 @@
 <div class="mt-4">
-    <form method="POST">
-        <input type="text" name='material' class="form-control md-4" placeholder="Material" required>
-        <input type="text" name='status' class="form-control md-4" placeholder="Status" required>
-        <input type="text" name='cor' class="form-control md-4" placeholder="Cor" required>
-        <input type="number" step="0.01" name='diametro' class="form-control md-4" placeholder="Diâmetro" required>
-        <input type="text" name='responsavel' class="form-control md-4" placeholder="Responsável" required>
-        <input type="number" name='peso' min="0" class="form-control md-4" placeholder="Peso" required>
-        <button type="submit" class="btn btn-success">atualizar</button>
+    <form method="POST" class="container" >
+        <div class="row justify-content-md-center">
+            <div class="col-"><select name="material" class="custom-select" id="Material"></select></div>
+            <div class="col- ml-1"><select name="cor" class="custom-select" id="Cor"></select></div>
+            <div class="col- ml-1"><select name="responsavel" class="custom-select" id="Responsavel"></select></div>
+            <input type="number" step="1" name='massa' min="0" class="col- ml-1" placeholder="Massa" required>
+            <div class="col- ml-1"><button type="submit" class="btn btn-success" >Cadastrar</button></div>
+        </div>
+        <div class="row justify-content-md-center mt-4">
+            <div class="col-">
+                <input type="checkbox" checked name="status" value="0">
+                <label for="status"> Fechado</label><br >
+            </div>
+            <div class="col- ml-4">
+                Diâmetro:
+                <input type="radio" id="175" checked name="diametro" value="1.75">
+                <label style="line-height: 2px;"for="175">1.75</label>
+                <input type="radio" id="30" name="diametro" value="3.0">
+                <label for="30">    3.0</label><br>
+            </div>
+        </div>
     </form>
-</div>
+</div>          
+
+<script src="/js/jquery-3.4.1.js"></script>
+<script>
+function listagem(label, lista){
+    let dropdown = $('#' + label);
+    dropdown.empty();
+    dropdown.append('<option selected="true" disabled>' + label + '</option>');
+    dropdown.prop('selectedIndex', 0);
+
+
+    for(item in lista){
+        dropdown.append($('<option></option>').text(lista[item]));
+    }
+    // Populate dropdown with list of provinces
+    //$.getJSON('/estoque/gerenciar/plotData', {label:label},function (data) {
+    //    $.each(data, function (key, entry) {
+    //        dropdown.append($('<option></option>').text(entry[Object.keys(entry)[0]]));
+    //    })
+    //});
+    }
+listagem("Material", ["PLA", "ABS", "PETG", "FLEX", "CARBONO", "TRITAN"])
+listagem("Cor",["BRANCO", "PRETO", "LARANJA", "VERDE", "AZUL", "ROXO", "MARMORE", "PRATA", "TRANSLUCIDO"])
+listagem("Responsavel", ["BEE", "LAB", "Professor", "Externo"])
+</script>

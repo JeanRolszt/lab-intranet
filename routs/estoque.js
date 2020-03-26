@@ -2,7 +2,7 @@ const express = require("express")
 const router = express.Router()
 
 router.get('/',(req,res)=>{
-    res.render("estoque/estoque")
+    res.render("estoque/gerenciar")
 })
 router.get('/gerenciar',(req,res)=>{
     res.render("estoque/gerenciar")
@@ -32,6 +32,7 @@ router.get('/gerenciar/cadrastar',(req,res)=>{
     res.render("estoque/cadrastar")
 })
 router.post('/gerenciar/cadrastar',(req,res)=>{
+    res.render("estoque/cadrastar", {isok: true})
     console.log(req.body)
 })
 
@@ -39,13 +40,16 @@ router.get('/gerenciar/plotData', (req,res)=>{
     rows = "POLIMERO, SUM(MASSA)"
     cond = "group by POLIMERO"
     mod = ""
-    if (req.query != {} && req.query.label == "cor"){
-        rows = "POLIMERO, COR, SUM(MASSA) "
-        cond = "group by POLIMERO, COR  order by -SUM(MASSA)" 
+    if(req.query!={}){
+        if (req.query.label == "cor"){
+            rows = "POLIMERO, COR, SUM(MASSA) "
+            cond = "group by POLIMERO, COR  order by -SUM(MASSA)" 
+        }
+        if (req.query.origem != undefined){
+            mod =  req.query.origem
+        }
     }
-    if (req.query != {} && req.query.origem != undefined){
-        mod =  req.query.origem
-    }
+    
     db.search(rows, "filamento", (err, rows) => {
         res.send(rows)
     },mod,cond)

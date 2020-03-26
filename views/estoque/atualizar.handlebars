@@ -32,26 +32,30 @@ Atualizado com sucesso!!!!
 
     }
 </style>
-<form class="form-inline" >
-    <div class="form-group" style="width: 120px;">
-        <label for="Tabela"> Tabela</label>
-        <select class="form-control" id="tabela">
-        <option>Estoque</option>
-        <option>Uso</option>
-        </select>
-    </div>
-    <div class="form-group" style="width: 120px;">
-        <label for="Responsavel">Responsável</label>
-        <select class="form-control" id="responsavel" onchange="updatePlots()">
-        <option>Todos</option>
-        <option>LAB</option>
-        <option>BEE</option>
-        </select>
-    </div>
-</form>
 
-<div class="divLeft"><canvas id="myChart1" width="400" height="400"></canvas></div>
-<div class="divRight"><canvas id="myChart2" width="400" height="400"></canvas></div>
+
+<div class="row justify-content-md-center mt-2">
+    <div class="col-">
+        <select class="custom-select" id="tabela">
+            <option selected="true" disabled>Tabela</option>
+            <option>Estoque</option>
+            <option>Uso</option>
+        </select>
+    </div>
+    <div class="col- ml-1">
+        <select class="custom-select" id="responsavel" onchange="updatePlots()">
+            <option selected="true" disabled>Responsavel</option>
+            <option>Todos</option>
+            <option>LAB</option>
+            <option>BEE</option>
+        </select>
+    </div>
+</div>
+
+<div class="row justify-content-md-center">
+    <div class="col- mr-5"><canvas id="myChart1" width="400" height="400"></canvas></div>
+    <div class="col-"><canvas id="myChart2" width="400" height="400"></canvas></div>
+</div>
 
 <script src="/js/Chart.min.js"></script>
 <script src="/js/jquery-3.4.1.js"></script>
