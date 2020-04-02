@@ -1,6 +1,11 @@
 const express = require("express")
 const router = express.Router()
 
+// 
+// SELECT filamento.FILAMENTO_ID, (SELECT MASSA FROM USO WHERE USO.FILAMENTO_ID=filamento.FILAMENTO_ID ORDER BY (julianday('now')-julianday(DATA)) ASC LIMIT 1) as massaatual FROM filamento WHERE filamento.FILAMENTO_ID = 'BA16';
+// SELECT filamento.FILAMENTO_ID, (SELECT MASSA FROM USO WHERE USO.FILAMENTO_ID=filamento.FILAMENTO_ID AND julianday(DATA) < julianday('2019-11-18') ORDER BY (julianday('now')-julianday(DATA)) ASC LIMIT 1) as massaant FROM filamento WHERE filamento.FILAMENTO_ID = 'BA16';
+//
+
 router.get('/',(req,res)=>{
     res.render("estoque/gerenciar")
 })
