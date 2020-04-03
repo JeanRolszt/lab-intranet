@@ -31,11 +31,14 @@
   <div id="menu1" class="tab-pane fade">
     <h3>Massa por polímero</h3>
     <div style="width: 600px; height: 300px; text-align: center; margin-left: auto; margin-right: auto;">
-        <canvas id="myChart1" width="600" height="300"></canvas>
+        <canvas id="massa_polimero_grafico" width="600" height="300"></canvas>
     </div>
   </div>
   <div id="menu2" class="tab-pane fade">
     <h3>Massa total ao longo do tempo</h3>
+    <div style="width: 600px; height: 300px; text-align: center; margin-left: auto; margin-right: auto;">
+        <canvas id="massa_tempo_grafico" width="600" height="300"></canvas>
+    </div>
   </div>
 </div>
 
@@ -181,16 +184,28 @@ listagem("Responsavel", ["BEE", "LAB", "Professor", "Externo"])
 <script type="text/javascript">
     function updatePlots(){
         data = responsiveTable.getRowsOut();
-        reloadPlot(myChart1, data)
+        reloadMassaPolimero(massa_polimero_grafico, data)
+        reloadMassaTempo(massa_tempo_grafico)
     }
-    function reloadPlot(myChart, data){
+    function reloadMassaPolimero(chart, data){
         distinctLabels = data.map(x=>x["Polímero"]).filter((x,i,s) => s.indexOf(x) == i)
         mass = distinctLabels.map(label => {
             return data.filter(x => x["Polímero"] == label).reduce((t,c) => t+=parseInt(c["Massa"]), 0)
         })
-        myChart.data.labels = distinctLabels
-        myChart.data.datasets[0].data = mass
-        myChart.update()
+        chart.data.labels = distinctLabels
+        chart.data.datasets[0].data = mass
+        chart.update()
+    }
+    function reloadMassaTempo(chart){
+        $.getJSON('/estoque/gerenciar/getData?funcao=massa', data=>{
+            t = data.map(x => new Date(x["data"]).toISOString().split('T')[0]);
+            m = data.map(x => parseInt(x["cum"]));
+
+            chart.data.labels = t
+            chart.data.datasets[0].data = m
+            chart.update()
+
+        })
     }
     function plot(myChart, cor, or){
         d = {}  
@@ -214,7 +229,7 @@ listagem("Responsavel", ["BEE", "LAB", "Professor", "Externo"])
 
         })
     }
-    myChart1 = new Chart($("#myChart1")[0].getContext("2d"), {
+    massa_polimero_grafico = new Chart($("#massa_polimero_grafico")[0].getContext("2d"), {
         type: "pie",
         data: {
             labels: [],
@@ -252,6 +267,22 @@ listagem("Responsavel", ["BEE", "LAB", "Professor", "Externo"])
             }
         }
     })
+
+
+    massa_tempo_grafico = new Chart($("#massa_tempo_grafico")[0].getContext("2d"), {
+        type: 'line',
+        data: {
+            datasets: [{
+                label: 'Massa(g)',
+                data: [1,2],
+                fill: false, 
+                borderColor: "rgb(75, 192, 192)", 
+                lineTension: 0.1
+            }]
+        },
+        options: {}
+    });
+
 </script>
 
 <script type="text/javascript" src="/js/responsiveTable.js"></script>
