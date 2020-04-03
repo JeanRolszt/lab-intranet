@@ -5,9 +5,14 @@
  module.exports = (squelize, DataTypes) => {
   var HistoricoFilamento = squelize.define('HistoricoFilamento', {
     massa: DataTypes.INTEGER,
-    data: DataTypes.DATE
-  }, {
-    freezeTableName: true
+    data: DataTypes.DATE,
+    FilamentoId: {
+      type: DataTypes.INTEGER,
+      references: {
+        model: 'Filamentos',
+        key: 'id'
+      }
+    }
   });
 
   HistoricoFilamento.associate = (models) => {
