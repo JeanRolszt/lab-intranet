@@ -10,8 +10,8 @@
     </form>
 </div>
 <center>
-{{#if isok}}
-Atualizado com sucesso!!!!
+{{#if message}}
+{{message}}
 {{/if}}
 </center>
 
@@ -71,12 +71,12 @@ function plot(myChart, cor, or){
         d["origem"] = or
     }
     $.getJSON('/estoque/gerenciar/plotData', d, data=>{
-        var pol = data.map(x=>x.POLIMERO)
+        var pol = data.map(x=>x.polimero)
         if(cor){
-        var pol = data.map(x=>x.POLIMERO + "-" + x.COR)
+        var pol = data.map(x=>x.polimero + "-" + x.cor)
 
         }
-        var m = data.map(x=>x["SUM(MASSA)"])
+        var m = data.map(x=>x.massa)
 
         myChart.data.labels = pol
         myChart.data.datasets[0].data = m
@@ -161,8 +161,8 @@ myChart2 = new Chart(ctx2,{
 function updatePlots(){
     var x = document.getElementById("responsavel").value;
     if(x!="Todos"){
-        plot(myChart1, false, `RESPONSAVEL=="${x}"`)
-        plot(myChart2, true, `RESPONSAVEL=="${x}"`)
+        plot(myChart1, false, `${x}`)
+        plot(myChart2, true, `${x}`)
     }
     else{
         plot(myChart1, false)

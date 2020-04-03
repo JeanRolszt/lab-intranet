@@ -16,19 +16,20 @@ router.get('/gerenciar/atualizar',(req,res)=>{
     res.render("estoque/atualizar")
     console.log(req.query)
 })
-router.post('/gerenciar/atualizar',(req,res)=>{
+router.post('/gerenciar/atualizar', (req,res) => {
     console.log(req.body)
-    d = new Date()
-    lD = d.toLocaleDateString().split("/")
-    sD = [lD[1], lD[0], lD[2]].join("/")
-
-    db.insert("USO", {
-        FILAMENTO_ID: req.body.codigo, 
-        MASSA: req.body.peso,
-        DATA: sD
+    db.Filamento.findOne({attributes: ['id'], where: {codigo: req.body.codigo}}).then(filamento => {
+        console.log(filamento.id);
+        db.HistoricoFilamento.create({
+            massa: parseInt(req.body.peso),
+            data: new Date(),
+            FilamentoId: filamento.id, 
+        })
+        res.render("estoque/atualizar", {message: "Histórico atualizado para o rolo " + req.body.codigo})
+    }).catch(err => {
+        res.render("estoque/atualizar", {message: "Falha ao atualizar histórico, talvez o código esteja errado."})
     })
     
-    res.render("estoque/atualizar", {isok: true})
 })
 router.get('/gerenciar/adicionar',(req,res)=>{
     res.render("estoque/adicionar")
@@ -42,22 +43,37 @@ router.post('/gerenciar/cadrastar',(req,res)=>{
 })
 
 router.get('/gerenciar/plotData', (req,res)=>{
-    rows = "POLIMERO, SUM(MASSA)"
-    cond = "group by POLIMERO"
-    mod = ""
+    attributes = [
+        'polimero', 
+        [db.sequelize.fn('SUM', db.sequelize.col('massa')), 'massa']
+    ];
+    group = ['polimero']
+    order = []
+    where = {}
+    
     if(req.query!={}){
         if (req.query.label == "cor"){
-            rows = "POLIMERO, COR, SUM(MASSA) "
-            cond = "group by POLIMERO, COR  order by -SUM(MASSA)" 
+            attributes.push('cor')
+            order = [db.sequelize.fn('-SUM', db.sequelize.col('massa'))]
         }
         if (req.query.origem != undefined){
-            mod =  req.query.origem
+            where = {responsavel: req.query.origem}
         }
     }
-    
-    db.search(rows, "filamento", (err, rows) => {
-        res.send(rows)
-    },mod,cond)
+
+    db.Filamento.findAll({
+        attributes: attributes, 
+        where: where,
+        group: group,
+        order: order
+    }).then(filamentos => res.send(filamentos));
+
+    // db.search(rows, "filamento", (err, rows) => {
+    //     res.send(rows)
+    // },mod,cond)
+
+
+    //res.send({})
 })
 
 

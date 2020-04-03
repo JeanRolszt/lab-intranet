@@ -9,7 +9,8 @@
     const estoque = require("./routs/estoque")
     const path = require("path")
     const sqlite3 = require("sqlite3")
-    const dbManager = require("./dbManager")
+    //const dbManager = require("./dbManager")
+    const db = require('./db/index.js')
     //const mongoose = require('mongoose')
 
 //CONFIGURAÇÕES
@@ -38,5 +39,5 @@
 const PORT = 8083
 app.listen(PORT,()=>{
     console.log(`Servidor rodando na porta ${PORT}`)
-    global.db = new dbManager()
+    global.db = db
 })
