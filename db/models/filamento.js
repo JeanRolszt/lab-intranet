@@ -2,8 +2,8 @@
  * Cada instância dessa classe representa um rolo de filamento em estoque
  */
 
-module.exports = (squelize, DataTypes) => {
-  var Filamento = squelize.define('Filamento', {
+module.exports = (sequelize, DataTypes) => {
+  var Filamento = sequelize.define('Filamento', {
     codigo: {
       type: DataTypes.STRING(10),
       unique: true

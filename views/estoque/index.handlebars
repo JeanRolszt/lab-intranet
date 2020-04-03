@@ -1,0 +1,295 @@
+
+<link rel="stylesheet" href="/css/responsiveTable.css">
+<script src="/js/Chart.min.js"></script>
+<script src="/js/jquery-3.4.1.js"></script>
+{{!-- <div class="text-center">
+    <a href="/estoque/gerenciar/cadrastar"><button type="button" class="btn btn-lg btn-primary mt-4">Cadrastar</button></a>
+    <a href="/estoque/gerenciar/atualizar"><button type="button" class="btn btn-lg btn-primary mt-4">Atualizar</button></a>
+</div> --}}
+
+<!-- Alerta de resultado -->
+{{#if message}}
+<div class="alert alert-info">
+  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+  <strong>Resultado:</strong> {{message}}
+</div>
+{{/if}}
+
+
+<!-- Gráficos -->
+<ul class="nav nav-tabs">
+  <li class="active"><a data-toggle="tab" href="#home" style="margin-right: 10px;">Home</a></li>
+  <li><a data-toggle="tab" href="#menu1" style="margin-right: 10px;">Massa por polímero</a></li>
+  <li><a data-toggle="tab" href="#menu2" style="margin-right: 10px;">Massa total no tempo</a></li>
+</ul>
+
+<div class="tab-content">
+  <div id="home" class="tab-pane fade in active show">
+    <h3>Gráficos</h3>
+    <p>Nesta aba você poderá ver gráficos de acordo com os filtros aplicados na tabela</p>
+  </div>
+  <div id="menu1" class="tab-pane fade">
+    <h3>Massa por polímero</h3>
+    <div style="width: 600px; height: 300px; text-align: center; margin-left: auto; margin-right: auto;">
+        <canvas id="myChart1" width="600" height="300"></canvas>
+    </div>
+  </div>
+  <div id="menu2" class="tab-pane fade">
+    <h3>Massa total ao longo do tempo</h3>
+  </div>
+</div>
+
+<!-- Adicionar filamento -->
+<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content" style="padding: 20px;">
+        <h3>Cadastrar novo rolo de filamento</h3>
+        <form method="POST" class="container">
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Material</label>
+                <div class="col-sm-10">
+                <select name="material" class="custom-select" id="Material"></select>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Cor</label>
+                <div class="col-sm-10">
+                <select name="cor" class="custom-select" id="Cor"></select>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Responsavel</label>
+                <div class="col-sm-10">
+                <select name="responsavel" class="custom-select" id="Responsavel"></select>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Massa</label>
+                <div class="col-sm-10">
+                <input type="number" step="1" name='massa' min="0" class="form-control col- ml-1" placeholder="Massa" required>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Fechado</label>
+                <div class="col-sm-10">
+                <input type="checkbox" checked name="status" value="0">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Diâmetro</label>
+                <div class="col-sm-10">
+                    <input type="radio" id="175" checked name="diametro" value="1.75">
+                    <label style="line-height: 2px;"for="175">1.75</label>
+                    <input type="radio" id="30" name="diametro" value="3.0">
+                    <label for="30">    3.0</label><br>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-success" >Cadastrar</button>
+        </form>
+    </div>
+  </div>
+</div>
+<script>
+function listagem(label, lista){
+    let dropdown = $('#' + label);
+    dropdown.empty();
+    dropdown.append('<option selected="true" disabled>' + label + '</option>');
+    dropdown.prop('selectedIndex', 0);
+
+
+    for(item in lista){
+        dropdown.append($('<option></option>').text(lista[item]));
+    }
+    // Populate dropdown with list of provinces
+    //$.getJSON('/estoque/gerenciar/plotData', {label:label},function (data) {
+    //    $.each(data, function (key, entry) {
+    //        dropdown.append($('<option></option>').text(entry[Object.keys(entry)[0]]));
+    //    })
+    //});
+    }
+listagem("Material", ["PLA", "ABS", "PETG", "FLEX", "CARBONO", "TRITAN"])
+listagem("Cor",["BRANCO", "PRETO", "LARANJA", "VERDE", "AZUL", "ROXO", "MARMORE", "PRATA", "TRANSLUCIDO"])
+listagem("Responsavel", ["BEE", "LAB", "Professor", "Externo"])
+</script>
+
+
+<!-- Editar filamento -->
+<div class="modal fade edit" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content" style="padding: 20px;">
+        <h3>Atualizar massa do rolo <span id="edit-cod"></span></h3>
+        <form method="POST" class="container" action="/estoque/gerenciar/atualizar">
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Novo peso</label>
+                <div class="col-sm-10">
+                <input name='codigo' id="edit-cod-input" style="display: none;">
+                <input min="0" max="1000" name="peso" type="number" class="form-control" placeholder="Peso" required>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-success" >Atualizar</button>
+        </form>
+    </div>
+  </div>
+</div>
+
+<!-- Tabela -->
+
+<div style="position: relative;">
+    <a href="" data-toggle="modal" data-target=".bd-example-modal-lg"><img src="/img/add.png" width=20 height=20/></a>
+    <input placeholder="Pesquisa por código" type="text" id="buscaCod"></input>
+    <div style="position: absolute; right: 0px; top: 0px;" id="responsive_counter" style="text-align: right;"></div>
+</div>
+<div class="pagesBar responsive_buttons" style="margin-bottom: 10px;"></div>
+<div class="table-responsive-sm">
+<table id="responsive" class="table">
+    <thead>
+        <tr>
+            <td class="notFiltrable">Código</td>
+            <td class="">Polímero</td>
+            <td class="">Aberto</td>
+            <td class="">Cor</td>
+            <td class="">Diâmetro</td>
+            <td class="">Responsável</td>
+            <td class="">Origem</td>
+            <td class="notFiltrable">Massa</td>
+            <td class="notFiltrable notSortable">Ação</td>
+        </tr>
+    </thead>
+    <tbody>
+        {{#data}}
+        {{data}}
+        <tr>
+            <td class="notFiltrable">{{codigo}}</td>
+            <td class="">{{polimero}}</td>
+            <td class="">{{aberto}}</td>
+            <td class="">{{cor}}</td>
+            <td class="">{{diametro}}</td>
+            <td class="">{{responsavel}}</td>
+            <td class="">{{origem}}</td>
+            <td class="">{{massa}}</td>
+            <td class="notFiltrable notSortable">
+                <a href="" data-toggle="modal" data-target=".edit" onclick="$('#edit-cod')[0].innerText='{{codigo}}'; $('#edit-cod-input')[0].value='{{codigo}}'"><img src="/img/edit.png" width=20/></a>
+            </td>
+        </tr>
+        {{/data}}
+    </tbody>
+</table>
+</div>
+
+<!-- Javascript -->
+
+<script type="text/javascript">
+    function updatePlots(){
+        data = responsiveTable.getRowsOut();
+        reloadPlot(myChart1, data)
+    }
+    function reloadPlot(myChart, data){
+        distinctLabels = data.map(x=>x["Polímero"]).filter((x,i,s) => s.indexOf(x) == i)
+        mass = distinctLabels.map(label => {
+            return data.filter(x => x["Polímero"] == label).reduce((t,c) => t+=parseInt(c["Massa"]), 0)
+        })
+        myChart.data.labels = distinctLabels
+        myChart.data.datasets[0].data = mass
+        myChart.update()
+    }
+    function plot(myChart, cor, or){
+        d = {}  
+        if(cor){
+            d = {label: "cor", cond: "ordered"}
+        }
+        if(or!=undefined){
+            d["origem"] = or
+        }
+        $.getJSON('/estoque/gerenciar/plotData', d, data=>{
+            var pol = data.map(x=>x.polimero)
+            if(cor){
+            var pol = data.map(x=>x.polimero + "-" + x.cor)
+
+            }
+            var m = data.map(x=>x.massa)
+
+            myChart.data.labels = pol
+            myChart.data.datasets[0].data = m
+            myChart.update()
+
+        })
+    }
+    myChart1 = new Chart($("#myChart1")[0].getContext("2d"), {
+        type: "pie",
+        data: {
+            labels: [],
+            datasets: [{
+                label: 'Massa(g)',
+                data: [1,2],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            },
+            legend: {
+                position: "right"
+            }
+        }
+    })
+</script>
+
+<script type="text/javascript" src="/js/responsiveTable.js"></script>
+
+<script type="text/javascript">
+
+  function ResponsiveTableCodFilter(labelToFilter_, inputCod_){
+    var responsiveTable;
+    var self = this;
+    var inputCod = Dom.id(inputCod_);
+    var labelToFilter = labelToFilter_;
+
+    inputCod.addEventListener("keyup", function(e){
+        self.responsiveTable.updateModule(self);
+    })
+    
+    this.transferFunction = function(rows){
+      filteredData = rows.filter(row => row[labelToFilter].indexOf(inputCod.value) >= 0);
+      return filteredData;
+    }
+  }
+
+  var responsiveTable = new ResponsiveTable("responsive", updatePlots);
+  var responsiveTableSorter = new ResponsiveTableSorter();
+  var responsiveTableFilter = new ResponsiveTableFilter();
+  var responsiveTableCodFilter = new ResponsiveTableCodFilter("Código", "buscaCod");
+  var responsiveTableCounter = new ResponsiveTableRowsCounter();
+
+  responsiveTable.appendModule(responsiveTableSorter);
+  responsiveTable.appendModule(responsiveTableFilter);
+  responsiveTable.appendModule(responsiveTableCodFilter);
+  responsiveTable.appendModule(responsiveTableCounter);
+  //responsiveTable.appendModule();
+
+  responsiveTable.init();
+  
+</script>
+
+<br/>
+<br/>
+<br/>
