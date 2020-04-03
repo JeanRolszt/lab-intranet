@@ -7,27 +7,40 @@ const router = express.Router()
 //
 
 router.get('/',(req,res)=>{
-    res.render("estoque/gerenciar")
+    console.log(req.query);
+    if(req.query["status"] == "0") message = "Massa atualizada";
+    else if((req.query["status"] == "1")) message = "Falha ao atualizar a massa";
+    else message = undefined;
+    db.Filamento.findAll().then(filamentos => {
+        res.render("estoque/", {data: filamentos.map(x => x.dataValues), message: message})
+    }).catch(err => {
+        res.render("estoque/", {data: [], message: message})
+    })
+    
 })
 router.get('/gerenciar',(req,res)=>{
     res.render("estoque/gerenciar")
 })
 router.get('/gerenciar/atualizar',(req,res)=>{
     res.render("estoque/atualizar")
-    console.log(req.query)
 })
 router.post('/gerenciar/atualizar', (req,res) => {
-    console.log(req.body)
     db.Filamento.findOne({attributes: ['id'], where: {codigo: req.body.codigo}}).then(filamento => {
-        console.log(filamento.id);
+        novamassa = parseInt(req.body.peso);
+
         db.HistoricoFilamento.create({
-            massa: parseInt(req.body.peso),
+            massa: novamassa,
             data: new Date(),
             FilamentoId: filamento.id, 
         })
-        res.render("estoque/atualizar", {message: "Histórico atualizado para o rolo " + req.body.codigo})
+
+        filamento.setDataValue("massa", novamassa);
+        filamento.save();
+        res.redirect("../?status=0");
+        //res.render("estoque/", {message: "Histórico atualizado para o rolo " + req.body.codigo})
     }).catch(err => {
-        res.render("estoque/atualizar", {message: "Falha ao atualizar histórico, talvez o código esteja errado."})
+        res.redirect("../?status=1");
+        //res.render("estoque/", {message: "Falha ao atualizar histórico, talvez o código esteja errado."})
     })
     
 })
@@ -39,7 +52,6 @@ router.get('/gerenciar/cadrastar',(req,res)=>{
 })
 router.post('/gerenciar/cadrastar',(req,res)=>{
     res.render("estoque/cadrastar", {isok: true})
-    console.log(req.body)
 })
 
 router.get('/gerenciar/plotData', (req,res)=>{
