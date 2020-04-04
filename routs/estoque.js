@@ -12,6 +12,7 @@ router.get('/',(req,res)=>{
     console.log(req.query);
     if(req.query["status"] == "0") message = "Massa atualizada";
     else if((req.query["status"] == "1")) message = "Falha ao atualizar a massa";
+    else if((req.query["status"] == "2")) message = "Codigo " + req.query["cod"]
     else message = undefined;
     db.Filamento.findAll().then(filamentos => {
         res.render("estoque/", {data: filamentos.map(x => x.dataValues), message: message})
@@ -47,15 +48,65 @@ router.post('/gerenciar/atualizar', (req,res) => {
     })
     
 })
+router.post('/gerenciar/cadastrar', (req,res) => {
+    console.log(req.body)
+    // status = 2 cadastro com sucesso
+    // statis = 3 falha no cadastro
+    data = req.body
+    const qtd = req.body.qtd
+    
+    data["aberto"] = (data["status"]==undefined)? true: false
+    delete data["status"]
+    delete data["qtd"]
+
+    var codigo = req.body.responsavel[0] + req.body.polimero[0]
+    //res.redirect("/?status=2");
+    db.FilamentoContadorClasse.findOne({attributes: ['contador'], where: {codigo:codigo}}).then(filamento => {
+        var i
+        var codigos = ""
+        var dataAll = []
+        for(i = filamento.contador+1;i <= filamento.contador+ parseInt(qtd); i++){
+            data["codigo"] = codigo + i
+            dataAll.push(Object.assign({}, data))
+            codigos = codigos + codigo + i + ","
+        }
+        console.log(dataAll)
+        // db.Filamentos.create({
+        //     codigo: consumo,
+        //     data: new Date(),
+        //     FilamentoId: filamento.id, 
+        // })
+        // filamento.setDataValue("contador", i);
+        // filamento.save();
+        res.redirect("../?status=2&cod=" + codigos);
+        // novamassa = parseInt(req.body.peso);
+        // consumo = filamento.massa - novamassa;
+
+        // db.ConsumoFilamento.create({
+        //     massa: consumo,  
+        //     data: new Date(),
+        //     FilamentoId: filamento.id, 
+        // })
+
+        // filamento.setDataValue("massa", novamassa);
+        // filamento.save();
+        // res.redirect("../?status=0");
+        // //res.render("estoque/", {message: "Histórico atualizado para o rolo " + req.body.codigo})
+    }).catch(err => {
+        res.redirect("../?status=1");
+        //res.render("estoque/", {message: "Falha ao atualizar histórico, talvez o código esteja errado."})
+    })
+    
+})
 router.get('/gerenciar/adicionar',(req,res)=>{
     res.render("estoque/adicionar")
 })
 router.get('/gerenciar/cadrastar',(req,res)=>{
     res.render("estoque/cadrastar")
 })
-router.post('/gerenciar/cadrastar',(req,res)=>{
-    res.render("estoque/cadrastar", {isok: true})
-})
+// router.post('/gerenciar/cadrastar',(req,res)=>{
+//     res.render("estoque/cadrastar", {isok: true})
+// })
 
 router.get('/gerenciar/getData', (req, res) => {
     if(req.query["funcao"] == "consumo"){
