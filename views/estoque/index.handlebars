@@ -139,7 +139,7 @@ listagem("Responsavel", ["BEE", "LAB", "Professor", "Externo"])
 
 <div style="position: relative;">
     <a href="" data-toggle="modal" data-target=".bd-example-modal-lg"><img src="/img/add.png" width=20 height=20/></a>
-    <input placeholder="Pesquisa por código" type="text" id="buscaCod" onkeydown="if(event.key == 'Tab' && responsiveTable.getRawData().map(x => x['Código']).indexOf(this.value) >= 0){$('.edit').modal('show'); loadEditScreen(this.value);}"></input>
+    <input placeholder="Pesquisa por código" type="text" id="buscaCod" onkeydown="if(event.key == 'Tab' && responsiveTable.getRawData().map(x => x['Código']).indexOf(this.value) >= 0){$('.edit').modal('show'); loadEditScreen(this.value);}" autofocus></input>
     <div style="position: absolute; right: 0px; top: 0px;" id="responsive_counter" style="text-align: right;"></div>
 </div>
 <div class="pagesBar responsive_buttons" style="margin-bottom: 10px;"></div>
