@@ -1,7 +1,7 @@
 
 <link rel="stylesheet" href="/css/responsiveTable.css">
 <script src="/js/Chart.min.js"></script>
-<script src="/js/jquery-3.4.1.js"></script>
+
 {{!-- <div class="text-center">
     <a href="/estoque/gerenciar/cadrastar"><button type="button" class="btn btn-lg btn-primary mt-4">Cadrastar</button></a>
     <a href="/estoque/gerenciar/atualizar"><button type="button" class="btn btn-lg btn-primary mt-4">Atualizar</button></a>
@@ -117,16 +117,16 @@ listagem("Responsavel", ["BEE", "LAB", "Professor", "Externo"])
 
 
 <!-- Editar filamento -->
-<div class="modal fade edit" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+<div class="modal fade edit" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content" style="padding: 20px;">
         <h3>Atualizar massa do rolo <span id="edit-cod"></span></h3>
-        <form method="POST" class="container" action="/estoque/gerenciar/atualizar">
+        <form method="POST" class="container" id="edit-form" action="/estoque/gerenciar/atualizar">
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Novo peso</label>
                 <div class="col-sm-10">
                 <input name='codigo' id="edit-cod-input" style="display: none;">
-                <input min="0" max="1000" name="peso" type="number" class="form-control" placeholder="Peso" required>
+                <input id="edit-novo-peso-input" min="0" max="1000" name="peso" type="number" class="form-control" placeholder="Peso" required>
                 </div>
             </div>
             <button type="submit" class="btn btn-success" >Atualizar</button>
@@ -139,7 +139,7 @@ listagem("Responsavel", ["BEE", "LAB", "Professor", "Externo"])
 
 <div style="position: relative;">
     <a href="" data-toggle="modal" data-target=".bd-example-modal-lg"><img src="/img/add.png" width=20 height=20/></a>
-    <input placeholder="Pesquisa por código" type="text" id="buscaCod"></input>
+    <input placeholder="Pesquisa por código" type="text" id="buscaCod" onkeydown="if(event.key == 'Tab' && responsiveTable.getRawData().map(x => x['Código']).indexOf(this.value) >= 0){$('.edit').modal('show'); loadEditScreen(this.value);}"></input>
     <div style="position: absolute; right: 0px; top: 0px;" id="responsive_counter" style="text-align: right;"></div>
 </div>
 <div class="pagesBar responsive_buttons" style="margin-bottom: 10px;"></div>
@@ -171,7 +171,7 @@ listagem("Responsavel", ["BEE", "LAB", "Professor", "Externo"])
             <td class="">{{origem}}</td>
             <td class="">{{massa}}</td>
             <td class="notFiltrable notSortable">
-                <a href="" data-toggle="modal" data-target=".edit" onclick="$('#edit-cod')[0].innerText='{{codigo}}'; $('#edit-cod-input')[0].value='{{codigo}}'"><img src="/img/edit.png" width=20/></a>
+                <a href="" data-toggle="modal" data-target=".edit" onclick="loadEditScreen('{{codigo}}');"><img src="/img/edit.png" width=20/></a>
             </td>
         </tr>
         {{/data}}
@@ -182,6 +182,13 @@ listagem("Responsavel", ["BEE", "LAB", "Professor", "Externo"])
 <!-- Javascript -->
 
 <script type="text/javascript">
+    function loadEditScreen(codigo){
+        $('.edit').on('shown.bs.modal', function () {
+            $('#edit-novo-peso-input').focus();
+        })  
+        $('#edit-cod')[0].innerText = codigo; 
+        $('#edit-cod-input')[0].value = codigo;
+    }
     function updatePlots(){
         data = responsiveTable.getRowsOut();
         reloadMassaPolimero(massa_polimero_grafico, data)
