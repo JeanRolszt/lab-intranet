@@ -18,7 +18,7 @@ Object.values(db).forEach(model => {
     if(model.associate) model.associate(db);
 })
 
-sequelize.sync({ alter: true });
+sequelize.sync();
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
