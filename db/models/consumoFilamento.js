@@ -20,7 +20,7 @@
   }
 
   ConsumoFilamento.obterHistoricoMassa = function(){
-    query = "SELECT data, SUM(day_sum) OVER ( ORDER BY data ASC ) as cum FROM (SELECT DATE(data) as data, SUM(massa) as day_sum FROM ConsumoFilamentos GROUP BY DATE(data)) ORDER BY data;";
+    query = "SELECT data, SUM(day_sum) OVER ( ORDER BY data ASC ) as cum FROM (SELECT DATE(data) as data, -SUM(massa) as day_sum FROM ConsumoFilamentos GROUP BY DATE(data)) ORDER BY data;";
     return sequelize.query(query);
   }
 
