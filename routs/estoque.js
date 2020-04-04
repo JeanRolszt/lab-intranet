@@ -12,7 +12,7 @@ router.get('/',(req,res)=>{
     console.log(req.query);
     if(req.query["status"] == "0") message = "Massa atualizada";
     else if((req.query["status"] == "1")) message = "Falha ao atualizar a massa";
-    else if((req.query["status"] == "2")) message = "Codigo " + req.query["cod"]
+    else if((req.query["status"] == "2")) message = "Filamentos cadastrados com sucesso, Codigo(s): " + req.query["cod"]
     else message = undefined;
     db.Filamento.findAll().then(filamentos => {
         res.render("estoque/", {data: filamentos.map(x => x.dataValues), message: message})
@@ -55,13 +55,15 @@ router.post('/gerenciar/cadastrar', (req,res) => {
     data = req.body
     const qtd = req.body.qtd
     
-    data["aberto"] = (data["status"]==undefined)? true: false
+    data["aberto"] = (data["status"]==undefined)? 1: 0
+    data["massa"] = parseInt(data["massa"])
     delete data["status"]
     delete data["qtd"]
+    
 
     var codigo = req.body.responsavel[0] + req.body.polimero[0]
     //res.redirect("/?status=2");
-    db.FilamentoContadorClasse.findOne({attributes: ['contador'], where: {codigo:codigo}}).then(filamento => {
+    db.FilamentoContadorClasse.findOne({attributes: ['id','contador'], where: {codigo:codigo}}).then(filamento => {
         var i
         var codigos = ""
         var dataAll = []
@@ -71,28 +73,12 @@ router.post('/gerenciar/cadastrar', (req,res) => {
             codigos = codigos + codigo + i + ","
         }
         console.log(dataAll)
-        // db.Filamentos.create({
-        //     codigo: consumo,
-        //     data: new Date(),
-        //     FilamentoId: filamento.id, 
-        // })
-        // filamento.setDataValue("contador", i);
-        // filamento.save();
+        db.Filamento.bulkCreate(dataAll)
+        filamento.setDataValue("contador", i);
+        filamento.save();
         res.redirect("../?status=2&cod=" + codigos);
-        // novamassa = parseInt(req.body.peso);
-        // consumo = filamento.massa - novamassa;
-
-        // db.ConsumoFilamento.create({
-        //     massa: consumo,  
-        //     data: new Date(),
-        //     FilamentoId: filamento.id, 
-        // })
-
-        // filamento.setDataValue("massa", novamassa);
-        // filamento.save();
-        // res.redirect("../?status=0");
-        // //res.render("estoque/", {message: "Histórico atualizado para o rolo " + req.body.codigo})
-    }).catch(err => {
+        
+        }).catch(err => {
         res.redirect("../?status=1");
         //res.render("estoque/", {message: "Falha ao atualizar histórico, talvez o código esteja errado."})
     })
