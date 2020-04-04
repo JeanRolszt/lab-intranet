@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
       unique: true
     },
     contador: DataTypes.INTEGER
-  });
+  },  {timestamps: false});
 
   return FilamentoContadorClasse;
 }

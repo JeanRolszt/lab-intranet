@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
     responsavel: DataTypes.STRING(3),
     origem: DataTypes.STRING(10),
     massa: DataTypes.INTEGER
-  });
+  },    {timestamps: false});
 
   return Filamento;
 }

@@ -13,7 +13,7 @@
         key: 'id'
       }
     }
-  });
+  },  {timestamps: false});
 
   ConsumoFilamento.associate = (models) => {
     ConsumoFilamento.belongsTo(models.Filamento);
